@@ -1,0 +1,25 @@
+local MainTab = Window:CreateTab("Main", 4483362458) -- Icon ID
+
+-- สร้าง Toggle สำหรับ เปิด-ปิด ระบบ
+local Toggle = MainTab:CreateToggle({
+   Name = "Auto Spawn Galaxy Block",
+   CurrentValue = false,
+   Flag = "AutoSpawnGalaxy",
+   Callback = function(Value)
+      autoSpawn = Value
+
+      -- ลูปทำงานเมื่อเปิดใช้งาน (Toggle = true)
+      if autoSpawn then
+         task.spawn(function()
+            while autoSpawn do
+               -- ส่งสัญญาณ FireServer ไปยัง RemoteEvent
+               pcall(function()
+                  SpawnGalaxyBlock:FireServer()
+               end)
+               -- หน่วงเวลาเล็กน้อยเพื่อไม่ให้เกมกระตุก/เด้ง (ปรับตามต้องการ เช่น 0.1 หรือ 0.5)
+               task.wait(0.1) 
+            end
+         end)
+      end
+   end,
+})
